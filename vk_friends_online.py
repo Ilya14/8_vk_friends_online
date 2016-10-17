@@ -1,29 +1,36 @@
 import vk
 
 
-APP_ID = -1  # чтобы получить app_id, нужно зарегистрировать своё приложение на https://vk.com/dev
+APP_ID = 5672466
 
 
 def get_user_login():
-    pass
+    return input('Enter login > ')
 
 
 def get_user_password():
-    pass
+    return input('Enter password > ')
 
 
 def get_online_friends(login, password):
     session = vk.AuthSession(
         app_id=APP_ID,
+        scope='friends',
         user_login=login,
-        user_password=password,
+        user_password=password
     )
     api = vk.API(session)
-    # например, api.friends.get()
+    return sorted(
+        api.users.get(user_ids=api.friends.getOnline()),
+        key = lambda friend: friend['last_name']
+    )
 
 
 def output_friends_to_console(friends_online):
-    pass
+    print('VK online friends:')
+    for (num, friend) in enumerate(friends_online):
+        print(num + 1, friend['first_name'], friend['last_name'])
+
 
 if __name__ == '__main__':
     login = get_user_login()
